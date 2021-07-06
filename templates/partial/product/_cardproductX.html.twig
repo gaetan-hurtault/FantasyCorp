@@ -1,0 +1,51 @@
+<table>
+    <tr>
+        <td rowspan="2">
+            <div class="img-search">
+                <img src="{{ absolute_url(asset('picture/content/' ~ product.pictureFirst.name))}}" alt="Card image cap">
+            </div>
+        </td>
+        <td>
+            <a href="{{ path('product.information', {slug: product.slug,id_product: product.id}) }}">
+                <h5> {{ product.title }} </h5>
+                {{ include('partial/product/_ratingproduct.html.twig', {rating: product.rating}) }} 
+            </a>
+        </td>
+        <td>
+            {% if promo == 0 %}
+            <h6>{{ product.price|number_format(2, '.', ',') }} € </h6>
+            {% else %}
+            <h6 class="text-muted px-2"><del>{{ product.price|number_format(2, '.', ',') }} €</del></h6>
+                <h6> {{ promo|number_format(2, '.', ',') }} €</h6>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ product.category.name }}
+                       <div class="tag">
+              {% if (product.dateAdd|date_modify("+10 day")|date("Y/m/d") >=  "now"|date("Y/m/d")) %}       
+                <h7>Nouveau</h7>
+              {% elseif (product.dateAdd|date_modify("+1 month")|date("Y/m/d") >=  "now"|date("Y/m/d")) %}
+                <h7>Nouveauté</h7>
+              {% endif %}
+
+              {% if (product.productCondition == "occasion")%}
+                <h7>Occasion</h7>
+              {% endif %}
+              {% if (product.excluWeb == true)%}
+                <h7>Exclusivité Web</h7>
+              {% endif %}
+            </div>
+        </td>
+        <td>
+            <div class="btn-group">
+                <form action="{{ path('basket.update') }}" method="POST">
+                <input type="hidden" name="idProduct" value="{{ product.id }}">
+                <input type="hidden" name="quantity" class="form-control w-25" min="1" max="{{product.quantity}}" value="1">
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Ajouter au Panier</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+</table>

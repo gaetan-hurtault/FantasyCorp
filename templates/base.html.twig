@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <meta name="description" content="">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <script src="https://kit.fontawesome.com/9f32cf0958.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script src="{{ absolute_url(asset('js/jquery.sticky.js')) }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>      
+               <!-- select -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+        <link rel='stylesheet' type='text/css' href='{{ absolute_url(asset('style/index.css')) }}'>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+    {% block jseffect %}{% endblock %}
+    {% block header %}
+        <header class="d-block d-lg-none mobile bg-dark">
+            <nav class="border-bottom border-light d-flex justify-content-between align-items-center px-3 py-2">
+                <a href="{{path('homepage')}}">
+                    <img id="logoheader" class="my-2" src="{{ absolute_url(asset('picture/theme/icon.png')) }}">
+                </a>
+                <a data-toggle="collapse" href="#menuMobile" aria-expanded="false" aria-controls="menuMobile">
+                    <i class="fas fa-bars"></i>  
+                </a>
+                <a href="{{path('product.search.page')}}">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="{{path('basket.show')}}">
+                    <i class="fas fa-shopping-basket"></i>
+                </a>
+                 {% if app.user %}
+                    {% if app.user.role == 0 %}
+                    <a class="text-light" href="{{path('user.profile')}}"><i class="fas fa-user" alt='Profil'></i></a>
+                    {% endif %}   
+                    {% if app.user.role == 1 %}
+                    <a class="text-light" href="{{path('admin.index')}}"><i class="fa fa-sign-in" aria-hidden="true" alt='Administration'></i></a>
+                    {% endif %}  
+                    <a class="text-light" href="{{path('app_logout')}}"><i class="fas fa-sign-out-alt" alt='Déconnexion'></i></a>              
+                {% else %}
+                <a class="text-light" href="{{path('app_login')}}"><i class="fas fa-sign-in-alt" alt='Connexion'></i></a>
+                {% endif %}
+            </nav>
+            <div class="collapse bg-dark w-100 " id="menuMobile">
+                {{ render(path('menu.mobile'))}}  
+            </div>
+        </header>
+        <header class="d-none d-lg-block">
+            
+            <nav class="navbar navbar-dark bg-dark justify-content-between">
+                {% if app.user %}
+                    {% if app.user.role == 0 %}
+                    <a class="text-light" href="{{path('user.profile')}}"><i class="fa fa-sign-in" aria-hidden="true"></i>Mon Profil</a>
+                    {% endif %}   
+                    {% if app.user.role == 1 %}
+                    <a class="text-light" href="{{path('admin.index')}}"><i class="fa fa-sign-in" aria-hidden="true"></i>Administration</a>
+                    {% endif %} 
+                    <a class="text-light" href="{{path('app_logout')}}">Déconnexion</a>            
+                {% else %}
+                <a class="text-light" href="{{path('app_login')}}"><i class="fa fa-sign-in" aria-hidden="true"></i>Connexion</a>
+                {% endif %}
+            </nav>
+            <div class="d-flex justify-content-around align-items-center position-relative">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchAjax">
+                Recherche
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="searchAjax" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <form method="get" id="formSearch" action="{{path('product.search.page')}}">
+                                    <label class="px-1">Ma Recherche : </label>
+                                    <input type="text" id="searchValue" name="searchValue"></input>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="modal-body" id="searchContain">
+                                Pas de Produits !
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="submitSearch" class="btn btn-primary">En voir plus</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="{{path('homepage')}}">
+                    <img id="logoheader" class="my-2" src="{{ absolute_url(asset('picture/theme/logoy.jpg')) }}">
+                </a>
+                {% if not app.user or app.user.role == 0 %}
+                    {{ render(path('basket.link'))}}
+                {% endif %}
+            </div>
+                {{ render(path('menu'))}}     
+        </header>
+        {% endblock %}
+        <main class="p-3 pb-5">
+            <div class="container">
+                {% block body %}{% endblock %}
+            </div>
+        </main>
+        <footer class="bg-dark text-white p-2 d-flex justify-content-around sticky-bottom">
+            {% block footer %}
+                {{ render(path('page.footer'))}}  
+            {% endblock %}
+        </footer>
+        {% block javascripts %}{% endblock %}
+    <script>
+    (function (){
+        $("#submitSearch").on("click", function(e)
+        {
+            $("#formSearch").submit();
+        });
+    })();
+
+    (function (){
+        $("#searchValue").on("keyup", function (e) {  
+            if ($("#searchValue").val() != "")
+            {
+                $.ajax({
+                url: '{{ path('product.search') }}',
+                method: "POST",
+                dataType: "json",
+                    data: {
+                        "search" : $("#searchValue").val()
+                    },
+                    async: true,
+                    success: function (data) {
+                        if (data.view != 0)
+                        {
+                            $("#searchContain").html(data.view);
+                        }
+                        else{
+                            $("#searchContain").html("Pas de Produits !");
+                        }
+                    }
+                });
+            }
+            else{
+                $("#searchContain").html("Pas de Produits !");
+            }     
+        });
+    })();
+    (function (){
+        $('.category a').each(function() {
+            $( this ).hover(function(e){
+                let value = $( this ).attr('title');
+
+                $('.sous-menu').each(function() 
+                {
+                    $( this ).removeClass('active');
+                });
+
+                $('.sous-menu#'+value).addClass('active');
+            });
+        });
+
+        $('#mainmenu').on("mouseleave", function() {
+            $('.sous-menu').each(function() 
+            {
+                $( this ).removeClass('active');
+            });
+        });
+    })();
+      $(document).ready(function(){
+    $("header.mobile").sticky({topSpacing:0});
+  });
+    </script>
+    </body>
+</html>

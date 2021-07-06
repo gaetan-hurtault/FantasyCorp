@@ -1,0 +1,12 @@
+<div class="d-flex flex-column">
+    <h5>Informations :</h5>
+    {% for page in pages %}
+    <a href="{{ path('page.view', {slug: page.slug,id_page: page.id}) }}" class="text-light">
+        {{ page.title }}
+    </a>
+{% endfor %}
+</div>
+<div class="d-flex flex-column">
+    <h5> Notre Adresse : </h5>
+    {{ adresse|raw }}
+</div>

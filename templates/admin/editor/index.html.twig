@@ -1,0 +1,39 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Les éditeurs{% endblock %}
+
+{% block body %}
+<a class="btn btn-primary" href="{{path('admin.editor.add')}}" role="button">Ajouter un Editeur</a>
+<table  class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Id Editeur
+            </th>
+            <th>
+                Nom
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for editor in editors %}
+        <tr>
+            <td>
+                {{ editor.id }}
+            </td>
+            <td>
+                {{ editor.name }}
+            </td>
+            <td>
+                <a href="{{path("admin.editor.editer", {id : editor.id})}}" class="btn btn-secondary">Editer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(editors) }}
+{% endblock %}

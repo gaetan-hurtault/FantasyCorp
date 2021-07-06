@@ -1,0 +1,74 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Ajouter un Slide{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un Slide :</h1>
+    {{ form_start(form)}}
+    <div class="form-group d-flex align-items-center">
+        <label>Nom : </label>{{ form_widget(form.name,{'attr': {'class':'w-25 mx-1'}})}}
+    </div>
+    <div id="block-img-preview" class="p-2">
+    </div>
+    <div class="form-group d-flex align-items-center">
+        <label>Image du thème : </label>{{ form_widget(form.picture,{'attr': {'class':'w-25 mx-1'}})}}
+    </div>
+    <div class="form-group d-flex align-items-center">
+        <label>Concerne : </label>
+        <select id="cible" class="selectpicker mx-2">
+            <option value="theme">un Thème</option>
+            <option value="product">un Produit</option>
+            <option value="page">une Page</option>
+        </select>
+    </div>
+    <div class="form-group align-items-center d-flex choice theme">
+        <label>Thème : </label>{{ form_widget(form.theme,{'attr': {'class':'choice selectpicker w-25 mx-1','data-live-search':'true',}})}}
+    </div>
+    <div class="form-group align-items-center d-none choice product">
+        <label>Produit : </label>{{ form_widget(form.product,{'attr': {'class':'choice selectpicker w-25 mx-1','data-live-search':'true',}})}}
+    </div>
+    <div class="form-group align-items-center d-none choice page">
+        <label>Page : </label>{{ form_widget(form.page,{'attr': {'class':'choice selectpicker w-25 mx-1','data-live-search':'true',}})}}
+    </div>
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+<script>
+(function (){
+    $('#cible').on('change', function(e){
+        $('.choice.selectpicker').each(function()
+        {
+            $(this).val('default').selectpicker("refresh");
+        });
+
+        $('.choice.form-group').each(function()
+        {
+            if($(this).hasClass("d-flex"))
+            {
+                $(this).removeClass("d-flex");
+                $(this).addClass("d-none");
+            }
+        });
+        $(".form-group."+$(this).val()).addClass("d-flex");
+        
+    })
+})();
+(function (){
+    $('#form_picture').on('change', function(e){
+        $('#block-img-preview').html("");
+        let file = $("#form_picture").get(0).files[0];
+        if (file)
+        {
+            $('#block-img-preview').append('<div class="img-preview"><img src="" id="previewfirst"></div>');
+
+            let reader = new FileReader();
+
+            reader.onload = function(){
+                $("#previewfirst").attr("src", reader.result);
+            }
+            reader.readAsDataURL(file);
+                
+        }
+    });
+})();
+</script>
+{% endblock %}

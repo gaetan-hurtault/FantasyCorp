@@ -1,0 +1,55 @@
+<nav id="mainmenu" class="mb-2">
+  <div class="d-flex w-100 justify-content-center categories">
+    {% for category in categories %}
+      <div class="category font-weight-bold">
+        <a class="text-dark" title="cat{{ category.id }}" href="{{ path('product.byCategory', {slug: category.slug,id_category: category.id}) }}">
+              {{ category.name }}
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+  {% for category in categories %}
+    <div class="sous-menu" id="cat{{category.id}}">
+      <div class="d-flex align-items-center">
+        <div class="block-sm-vignette">
+          <form method="get" action="{{ path('product.byCategory', {slug: category.slug,id_category: category.id}) }}">
+            <input type="hidden" name="tag" value="nouveau">
+            <input type="submit" value="Nouveau" class="w-100 mb-2">
+          </form>
+          <form method="get" action="{{ path('product.byCategory', {slug: category.slug,id_category: category.id}) }}">
+            <input type="hidden" name="tag" value="nouveaute">
+            <input type="submit" value="Nouveauté" class="w-100 mb-2">
+          </form>
+          <form method="get" action="{{ path('product.byCategory', {slug: category.slug,id_category: category.id}) }}">
+            <input type="hidden" name="tag" value="promotion">
+            <input type="submit" value="Promotion" class="w-100 mb-2">
+          </form>
+        </div>
+        <div class="block-sm-link d-flex flex-column h-100">
+        {% for sousCategory in category.categories %}
+            <a href="{{ path('product.byCategory', {slug: sousCategory.slug,id_category: sousCategory.id}) }}">
+              {{ sousCategory.name }}
+            </a>
+        {% endfor %}
+        </div>
+        <div class="block-sm-card">
+          {% if category.categories|length > 0 %}
+          {% set categoryRandom = category.categories[random(0,category.categories|length - 1)] %}
+            {% if categoryRandom.products|length > 0 %}
+              {{ render(path('product.menu', {idCategory : categoryRandom.id}))}}
+              {% else %}
+              <h4>Aucun produit disponible!</h4>
+            {% endif %}
+          {% else %}
+            {% if category.products|length > 0 %}
+              {{ render(path('product.menu', {idCategory : category.id}))}}
+            {% else %}
+              <h4>Aucun produit disponible!</h4>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</nav>
+

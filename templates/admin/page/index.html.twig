@@ -1,0 +1,42 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Liste des Pages !{% endblock %}
+
+{% block body %}
+<a class="btn btn-primary" href="{{path('admin.page.add')}}" role="button">Ajouter une Page</a>
+<table  class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Nom de la page
+            </th>
+            <th>
+                online
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for page in pages %}
+        <tr>         
+            <td>
+                {{ page.title }}
+            </td>
+            <td>
+                {% if page.online == 1 %}
+                <a href="{{path("admin.page.online", {id : page.id})}}" class="text-success"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>
+                {% else %}
+                <a href="{{path("admin.page.online", {id : page.id})}}" class="text-danger"><i class="fa fa-ban" aria-hidden="true"></i></a>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{path("admin.page.editer", {id : page.id})}}" class="btn btn-secondary">Editer</a>
+                <a href="{{path("admin.page.delete", {id : page.id})}}" class="btn btn-danger">Supprimer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

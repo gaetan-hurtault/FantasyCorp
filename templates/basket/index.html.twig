@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+{% block body %}
+    {% if error is defined %}
+                <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    {% if basket is defined %}
+    <div class="bg-white rounded p-2">
+        <h1 class="border-bottom">Mon Panier - Commande n° {{ basket.id }}</h1>
+        {% for key, commandLine in basket.commandLines %}
+        <div id="{{commandLine.id}}" class="w-100 d-flex p-3 border-bottom">
+            <div class="image-basket">
+                <img src="{{ absolute_url(asset('picture/content/' ~ commandLine.product.pictureFirst.name)) }}">
+            </div>
+            <div class="d-flex flex-column w-100">
+                <h3 class="px-2"><a href="{{ path('product.information', {slug: commandLine.product.slug,id_product: commandLine.product.id}) }}">{{commandLine.product.title}}</a></h3>
+                <h5 class="px-2">Prix Unité : {{ (commandLine.totalPrice / commandLine.quantity)|round(2, 'common')|number_format(2, '.', ',')}} €</h5>
+                <div class="d-flex">
+                    <form class="d-flex justify-content-around px-1" action="{{ path('commandLine.update') }}" method="POST">
+                        <input type="number" name="quantity" class="mx-1" required 
+                            value={{commandLine.quantity}}
+                            max={{commandLine.product.quantity}} 
+                            min="1">
+                        <input type="hidden" name="idProduct" value={{ commandLine.product.id }}>
+                        <input type="hidden" name="idCommandLine" value={{ commandLine.id }}>
+                        <button type="submit" class="btn btn-primary">Mettre à Jour</button>
+                    </form>
+                    <form class="d-flex justify-content-around" action="{{ path('commandLine.delete') }}" method="POST">
+                            <input type="hidden" name="idCommandLine" value={{ commandLine.id }}>
+                        <button type="submit" class="btn btn-secondary">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="p-3 d-flex align-items-center border-bottom">
+            <select class="form-control w-50" id="shippingSelect">
+                <option value="0">Point Relai (MondialRelay)</option>
+                <option value="1">Livraison à Domicile (Colissimo)</option>
+                <option value="2">Retrait en Magasin</option>
+            </select>
+            <h5 id="shippingCost" class="px-2">
+                {{ "Frais d'envoi : " ~ basket.shippingCost|number_format(2, '.', ',')}} €
+            </h5>
+        </div>
+        <div class="p-3">        
+            <h5 id="basketPrice">
+                {{ "Sous-Total : " ~ basket.price }} €
+            </h5>
+            
+            <h5 id="basketPriceTotal">
+                {{ "Prix Total : " ~ (basket.price +  basket.shippingCost)|number_format(2, '.', ',') }} €
+            </h5>
+        </div>
+        <form action="{{path('basket.information')}}" method="post">
+            <input type="hidden" value="mondialrelay" name="shippingMode" id="shippingMode">
+            <input type="submit" class="btn btn-primary" value="Valider le Panier">
+        </form>
+    {% else %}
+        <h1>Votre panier est vide !</h1>
+    {% endif %}
+    </div>
+    <script>
+
+    (function (){
+       jQuery('#shippingSelect').change(function(){ 
+            jQuery('#shippingMode').val($(this).val());
+
+            if(jQuery('#shippingMode').val() != 2)
+            {
+                jQuery.ajax({
+                url: '{{ path('basket.shippingMode') }}',
+                method: "POST",
+                dataType: "json",
+                    data: {
+                        "shippingMode" : $('#shippingMode').val()
+                    },
+                    async: true,
+                    success: function (data) {
+                        $('#shippingCost').html("Frais d'envoi : " + data.shippingPrice + " €");
+                        $('#basketPriceTotal').html(("Prix Total : " + data.shippingPrice + data.basketPrice) + " €");
+                    }
+                });   
+            }
+            else
+            {
+                jQuery('#shippingCost').html('Gratuit');
+                jQuery('#basketPriceTotal').html($('#basketPrice').html());
+            }
+        });
+    })();
+
+{% if basket is defined %}
+jQuery( window ).ready(function() {
+        jQuery('#shippingSelect option').each(function(){
+            if( jQuery(this).val() == {{ basket.methodShipp }})
+            {
+                jQuery(this).select();
+            }
+        });
+    });
+{% endif %}
+    </script>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Editer un Slide{% endblock %}
+
+{% block body %}
+    <h1>Editer un Slide :</h1>
+    {{ form_start(form)}}
+    <div class="form-group d-flex align-items-center">
+        <label>Nom : </label>{{ form_widget(form.name,{'attr': {'class':'w-25 mx-1'}})}}
+    </div>
+    <div id="block-img-preview" class="p-2">
+        <div>
+            <img src="{{ absolute_url(asset('picture/content/' ~ slide.picture.name))}}" alt="Card image cap">
+        </div>
+    </div>
+    <div class="form-group d-flex align-items-center">
+        <label>Image du thème : </label>{{ form_widget(form.picture,{'attr': {'class':'w-25 mx-1'}})}}
+    </div>
+    {{ form_end(form) }}
+<script>
+(function (){
+    $('#form_picture').on('change', function(e){
+        $('#block-img-preview').html("");
+        let file = $("#form_picture").get(0).files[0];
+        if (file)
+        {
+            $('#block-img-preview').append('<div class="img-preview"><img src="" id="previewfirst"></div>');
+
+            let reader = new FileReader();
+
+            reader.onload = function(){
+                $("#previewfirst").attr("src", reader.result);
+            }
+            reader.readAsDataURL(file);
+                
+        }
+    });
+})();
+</script>
+{% endblock %}

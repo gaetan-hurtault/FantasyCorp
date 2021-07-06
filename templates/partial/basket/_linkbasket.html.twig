@@ -1,0 +1,8 @@
+    <a class="text-dark font-weight-bold" href="{{path('basket.show')}}">
+        <i class="fa fa-shopping-basket"></i>
+        {% if productBasket > 1 %}
+        Panier ({{productBasket}} Articles)
+        {% else %}
+        Panier ({{productBasket}} Article)
+        {% endif %}
+    </a>

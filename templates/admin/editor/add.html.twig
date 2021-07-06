@@ -1,0 +1,14 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Ajouter un éditeur{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un éditeur :</h1>
+    {{ form_start(form)}}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form) }}
+        </div>
+        {{ form_row(form.name) }}
+        {{ form_widget(form.categories,{'attr': {'class': 'selectpicker', 'data-live-search':'true'}}) }}
+    {{ form_end(form) }}
+{% endblock %}

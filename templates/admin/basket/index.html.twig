@@ -1,0 +1,42 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Les Paniers{% endblock %}
+
+{% block body %}
+<table  class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Id Panier
+            </th>
+            <th>
+                Nom Client
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for basket in baskets %}
+        <tr>
+            <td>
+                {{ basket.id }}
+            </td>
+            <td>
+                {% if basket.user.firstName is defined %}
+                    {{ basket.user.firstName }}
+                {% else %}
+                    Visiteur
+                {% endif %}
+            </td>
+            <td>
+              <a href="{{path("admin.basket.view", {basket : basket.id})}}" class="btn btn-secondary">Fiche Panier</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(baskets) }}
+{% endblock %}

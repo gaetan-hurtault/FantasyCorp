@@ -1,0 +1,14 @@
+<div id="themeFavorite" class="d-flex justify-content-center flex-wrap">
+    {% if themes is not null %}
+        {% for theme in themes %}
+            {% if theme.picture is not null %}
+            <a href="{{ path('product.search.page', {theme: theme.id}) }}">
+                <div>
+                    <h6>{{ theme.name }}</h6>
+                    <img src="{{ absolute_url(asset('picture/content/' ~ theme.picture.name))}}">
+                </div>
+            </a>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>

@@ -1,0 +1,10 @@
+{% extends 'basket/base.html.twig' %}
+
+{% block title %}Commande Validé{% endblock %}
+{% block body %}
+<div class="rounded bg-white p-4 text-center mt-2">
+    <h3>Merci pour votre Achat !</h3>
+    <a href="{{ path('bill.show', {idBill : bill}) }}">Ma Facture</a>
+    <a href="{{ path('homepage')}}">Retourner sur le site</a>
+</div>
+{% endblock %}

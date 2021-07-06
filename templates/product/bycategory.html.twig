@@ -1,0 +1,202 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {% if category is defined %}
+    {{ category.name }} 
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+  {% if category is defined %}
+  <div class="row">
+    <nav aria-label="breadcrumb" class="w-100">
+      <ol class="breadcrumb bg-light">
+        <li class="breadcrumb-item"><a href="{{ path('homepage') }}">Home</a></li>
+        {% if category.categoryParent != null  %}
+          <li class="breadcrumb-item"><a href="{{ path('product.byCategory', {slug: category.categoryParent.slug,id_category: category.categoryParent.id}) }}">
+          {{ category.categoryParent.name }}</a>
+          </li>
+        {% endif %}
+        <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+      </ol>
+    </nav>
+  </div>
+  {% endif %}
+<div class="row">
+{# Bloc de Recherche pc #}
+  <div class="col-lg-3 bg-light rounded">
+  {{ form_start(form, {'attr':{'id':'formSearchInner'}})}}
+    <div class="my-custom-class-for-errors">
+      {{ form_errors(form) }}
+    </div>
+    <h4>Filtres</h4>
+    <div class="form-group d-flex align-items-center">
+      {{ form_widget(form.search,{'attr': {'class': 'w-100 mx-1'}})}}
+        <button class="btn btn-primary mx-1 d-block d-md-none" type="button" data-toggle="collapse" data-target="#searchAdvanced" aria-expanded="false" aria-controls="searchAdvanced">
+        Recherche Avancée
+      </button>
+    </div>
+    <div class="collapse" id="searchAdvanced">
+      {% if category is not defined %}
+      <div class="py-1">
+          {{ form_label(form.categories)}}
+          {{ form_widget(form.categories,{'attr': {'class': 'w-100 mx-1 selectpicker','data-live-search':'true','multiple title':'Aucun Choix'}})}}
+      </div>
+      {% endif %}
+      <div class="py-1">
+          {{ form_label(form.editor)}}
+          {{ form_widget(form.editor,{'attr': {'class': 'w-100 mx-1 selectpicker','data-live-search':'true','title':'Aucun Choix'}})}}
+      </div>
+      <div class="py-1">
+          {{ form_label(form.languages)}}
+          {{ form_widget(form.languages,{'attr': {'class':'w-100 mx-1 selectpicker','data-live-search':'true','multiple title':'Aucun Choix'}})}}
+      </div>
+      <div class="py-1">
+        <label>Prix</label>
+        <div class="d-flex justify-content-between">
+          {{ form_widget(form.prixMin,{'attr': {'class': 'w-50 mx-1','placeholder' : 'min'}})}} -
+          {{ form_widget(form.prixMax,{'attr': {'class': 'w-50 mx-1','placeholder' : 'max'}})}} €
+        </div>
+      </div>
+      {% if form.ageMin is defined %}
+      <div class="py-1">
+        {{ form_label(form.ageMin)}}
+        {{ form_widget(form.ageMin,{'attr': {'class': 'w-25 mx-1'}})}}
+      </div>
+      {% endif %}
+        <div class="py-1">
+            {{ form_label(form.themes)}}
+            {{ form_widget(form.themes,{'attr': {'class': 'mx-1 selectpicker','data-live-search':'true','multiple title':'Aucun Choix'}})}}
+        </div>
+        <div class="py-1">
+          {{ form_label(form.condition)}}
+          {{ form_widget(form.condition,{'attr': {'class': ' mx-1'}})}}
+        </div>    
+      <div class="form-group d-flex justify-content-between flex-wrap">
+        {% if form.timeMin is defined %}
+        <div class="py-1">
+          <label>Nombres de Joueurs</label>
+          <div class="d-flex justify-content-between">
+            {{ form_widget(form.nbrPlayerMin,{'attr': {'class': 'w-50 mx-1','placeholder' : 'min'}})}}
+            {{ form_widget(form.nbrPlayerMax,{'attr': {'class': 'w-50 mx-1','placeholder' : 'max'}})}}
+          </div>
+        </div>
+        <div class="py-1">
+          <label>Temps de Jeu</label>
+          <div class="d-flex justify-content-between">
+            {{ form_widget(form.timeMin,{'attr': {'class': 'w-50 mx-1'}})}}
+            {{ form_widget(form.timeMax,{'attr': {'class': 'w-50 mx-1'}})}}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="form-group d-flex flex-wrap">
+      {{ form_widget(form.rechercher) }}   
+      
+      {% if category is defined %}
+      <a class="btn btn-secondary mx-1" href="{{ path('product.byCategory', {slug: category.slug,id_category: category.id}) }}">
+      Reinitialiser
+      </a>
+      {% else %}
+            <a class="btn btn-secondary mx-1" href="{{ path('product.search.page') }}">
+      Reinitialiser
+      </a>
+      {% endif %}
+    </div>
+         
+  </div>
+
+  <div class="col-lg-9 col-md-12">
+    {# Bloc en-tête container #} 
+    {% if category is defined %}
+      <h1> {{ category.name }} </h1>
+    {% endif %}
+  {# Bloc affichage produit #} 
+    <div class="d-flex align-items-center justify-content-end w-100 p-1">
+      <h7>Trier par :</h7> {{ form_widget(form.tri,{'attr': {'class': 'w-25 mx-1'}})}}
+      {{ form_end(form) }}
+    </div>
+      {% if products is empty %}
+        <h6>Aucun produit ne correspond à votre recherche!</h6>
+      {% else %}
+        <div class="d-flex justify-content-start flex-wrap">
+        {% for data in products %}
+          <div class="col-sm-6 col-md-6 col-lg-4 mb-1">
+              <div class="card box-shadow mb-1 w-100 h-100">
+                <a href="{{ path('product.information', {slug: data["product"].slug,id_product: data["product"].id}) }}">
+                  <div class="card-header p-0 image-card">
+                    <img class="card-img-top" src="{{ absolute_url(asset('picture/content/' ~ data["product"].pictureFirst.name))}}" alt="Card image cap">
+                  </div>
+                </a>
+                <div class="card-body text-center d-flex justify-content-center flex-column">
+                  <div class="tag">
+                    {% if (data["product"].dateAdd|date_modify("+10 day")|date("Y/m/d") >=  "now"|date("Y/m/d")) %}       
+                      <h7>Nouveau</h7>
+                    {% elseif (data["product"].dateAdd|date_modify("+1 month")|date("Y/m/d") >=  "now"|date("Y/m/d")) %}
+                      <h7>Nouveauté</h7>
+                    {% endif %}
+
+                    {% if (data["product"].productCondition == "occasion")%}
+                      <h7>Occasion</h7>
+                    {% endif %}
+                    {% if (data["product"].excluWeb == true)%}
+                      <h7>Exclusivité Web</h7>
+                    {% endif %}
+                  </div>
+                    <h6> {{ data["product"].title }} </h6> 
+                    {{ include('partial/product/_ratingproduct.html.twig', {rating: data["product"].rating}) }}
+                    {% if data["promo"] == 0 %}
+                    <h6>{{ data["product"].price|number_format(2, '.', ',') }} € </h6>
+                    {% else %}
+                    <div class="d-flex justify-content-center">
+                      <h6 class="text-muted px-2"><del>{{ data["product"].price|number_format(2, '.', ',') }} €</del></h6>
+                      <h6> {{ data["promo"]|number_format(2, '.', ',') }} €</h6>
+                    </div>
+                    {% endif %}
+                    {% if (data["product"].quantity > 0) %}
+                    <div class="d-flex justify-content-center align-items-center">
+                      <div class="btn-group">
+                          <form action="{{ path('basket.update') }}" method="POST">
+                          <input type="hidden" name="idProduct" value="{{ data["product"].id }}">
+                          <input type="hidden" name="quantity" class="form-control w-25" min="1" max="{{data["product"].quantity}}" value="1">
+                          <button type="submit" class="btn btn-sm btn-outline-secondary">Ajouter au Panier</button>
+                          </form>
+                      </div>
+                    </div>
+                    {% else %}
+                    <h7>Rupture de Stock !</h7> 
+                    {% endif %}
+                </div>
+              </div>
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    <div class='row d-flex d-flex justify-content-end'>
+      {{ knp_pagination_render(products) }}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script>let adresse = window.location.href;
+
+//**********************************Traitement
+
+$('#clearForm').on('click', function(e)
+{
+  $('#formSearchInner').trigger("reset");
+});
+
+$('#form_tri').on('change', function (e) {
+  $('#formSearchInner').submit();
+});
+
+if (window.innerWidth > 768)
+{
+  $('#searchAdvanced').addClass('show');
+}
+</script>
+{% endblock %}

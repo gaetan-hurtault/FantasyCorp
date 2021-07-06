@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modification de Données :{% endblock %}
+
+{% block body %}
+    {% if error is defined %}
+        <div class="alert alert-warning text-center" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+    <h1>Mettre à jour mes données :</h1>
+    {{ form_start(form)}}
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

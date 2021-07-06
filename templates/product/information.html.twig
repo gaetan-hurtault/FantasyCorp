@@ -1,0 +1,243 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ product.title }} 
+{% endblock %}
+{% block body %}
+  <div class="row pt-1">
+    <nav aria-label="breadcrumb" class="w-100">
+      <ol class="breadcrumb bg-white">
+        <li class="breadcrumb-item"><a href="{{ path('homepage') }}">Home</a></li>
+        {% if product.category.categoryParent != null  %}
+          <li class="breadcrumb-item"><a href="{{ path('product.byCategory', {slug: product.category.categoryParent.slug,id_category: product.category.categoryParent.id}) }}">
+          {{ product.category.categoryParent.name }}</a>
+          </li>
+        {% endif %}
+        <li class="breadcrumb-item" aria-current="page">
+            <a href="{{ path('product.byCategory', {slug: product.category.slug,id_category: product.category.id}) }}">
+                {{ product.category.name }}
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+      </ol>
+    </nav>
+  </div>
+<div class="row d-flex py-5 bg-white rounded ">
+    <div class="block-img col-md-4">
+        <div class="block-img-main text-center">
+            <img src="{{ absolute_url(asset('picture/content/' ~ product.pictureFirst.name))}}" alt="Card image cap">
+        </div>
+        <div class="block-img-min my-1">
+            {% for picture in product.pictures %}
+                <img src="{{ absolute_url(asset('picture/content/' ~ picture.name))}}" alt="Card image cap">
+            {% endfor %}
+        </div>
+    </div>
+    <div class="block-desc col-md-8">
+        <h2>{{ product.title }}</h2>
+            <div class="d-flex">
+                {{ include('partial/product/_ratingproduct.html.twig', {rating: product.rating}) }}
+                <div class="mx-2">
+                    {{ product.rating ~ '/' ~ 5 }}
+                </div>
+            </div>
+        <h6>
+            {{ product.category.name }}
+            {% if product.editor is not empty %}
+            {{ " - " ~ product.editor.name }}
+            {% endif %}
+        </h6>
+        <div class="tag">
+            {% if (product.dateAdd|date_modify("+10 day")|date("Y/m/d") >=  "now"|date("Y/m/d")) %}       
+            <h7>Nouveau</h7>
+            {% elseif (product.dateAdd|date_modify("+1 month")|date("Y/m/d") >=  "now"|date("Y/m/d")) %}
+            <h7>Nouveauté</h7>
+            {% endif %}
+            {% if (product.productCondition == "occasion")%}
+            <h7>Occasion</h7>
+            {% endif %}
+            {% if (product.excluWeb == true)%}
+            <h7>Exclusivité Web</h7>
+            {% endif %}
+        </div>
+        {% if product.descriptionFast is not empty %}
+        {{ product.descriptionFast|raw}}
+        {% endif %}
+        {% if product.ageMin > 1 %}
+        <div class="text-light rounded d-inline-block p-1 vignette-product">
+            <img src="{{ absolute_url(asset('picture/theme/age.svg'))}}" alt="Card image cap"> <h7 class="font-weight-bold">{{ product.ageMin }} ans Minimum</h7>
+        </div>
+        {% endif %}
+        {% if product.playerNumberMax != null or product.playerNumberMin != null %}
+            {% if product.playerNumberMin == null %}
+                <div class="text-light rounded d-inline-block p-1 vignette-product">
+                    <img src="{{ absolute_url(asset('picture/theme/players.svg'))}}" alt="Card image cap"> <h7 class="font-weight-bold">Jusque {{ product.playerNumberMax  }} joueurs</h7>
+                </div>
+            {% elseif product.playerNumberMax == null %}
+                <div class="text-light rounded d-inline-block p-1 vignette-product">
+                    <img src="{{ absolute_url(asset('picture/theme/player.svg'))}}" alt="Card image cap"> <h7 class="font-weight-bold">à partir de {{ product.playerNumberMin }} joueur(s)</h7>
+                </div>
+            {% else %}
+                <div class="text-light rounded d-inline-block p-1 vignette-product">
+                    <img src="{{ absolute_url(asset('picture/theme/player.svg'))}}" alt="Card image cap"> <h7 class="font-weight-bold">De {{ product.playerNumberMin }} à {{ product.playerNumberMax  }} joueurs</h7>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if product.timePlayingMin != null or product.timePlayingMax != null %}
+            {% if product.timePlayingMin == null %}
+                {% if product.timePlayingMax == 30 %}
+                    {% set timeMax = "30 minutes" %}
+                {% else %}
+                    {% if (product.timePlayingMax % 60) == 0 %}
+                        {% set timeMax =  (product.timePlayingMax // 60) ~ "H" %}
+                    {% else %}
+                        {% set timeMax =  (product.timePlayingMax // 60) ~ "H" ~ (product.timePlayingMax % 60) %}
+                    {% endif %}
+                {% endif %}
+                <div class="text-light rounded d-inline-block p-1 vignette-product">
+                    <img src="{{ absolute_url(asset('picture/theme/duration.svg'))}}" alt="Card image cap"> <h7 class="font-weight-bold">Jusque {{ (timeMax) }}</h7>
+                </div>
+            {% elseif product.timePlayingMax == null %}
+                {% if product.timePlayingMin == 30 %}
+                    {% set timeMin = "30 minutes" %}
+                {% else %}
+                    {% if (product.timePlayingMin % 60) == 0 %}
+                        {% set timeMax =  (product.timePlayingMin // 60) ~ "H" %}
+                    {% else %}
+                        {% set timeMax =  (product.timePlayingMin // 60) ~ "H" ~ (product.timePlayingMin % 60) %}
+                    {% endif %}                
+                {% endif %}
+                <div class="text-light rounded d-inline-block p-1 vignette-product">
+                    <img src="{{ absolute_url(asset('picture/theme/duration.svg'))}}" alt="Card image cap"> <h7 class="font-weight-bold">à partir de {{ timeMin }}</h7>
+                </div>
+            {% else %}
+                {% if product.timePlayingMax == 30 %}
+                    {% set timeMax = "30 minutes" %}
+                {% else %}
+                    {% if (product.timePlayingMax % 60) == 0 %}
+                        {% set timeMax =  (product.timePlayingMax // 60) ~ "H" %}
+                    {% else %}
+                        {% set timeMax =  (product.timePlayingMax // 60) ~ "H" ~ (product.timePlayingMax % 60) %}
+                    {% endif %}
+                {% endif %}
+                {% if product.timePlayingMin == 30 %}
+                    {% set timeMin = "30 minutes" %}
+                {% else %}
+                    {% if (product.timePlayingMin % 60) == 0 %}
+                        {% set timeMax =  (product.timePlayingMin // 60) ~ "H" %}
+                    {% else %}
+                        {% set timeMax =  (product.timePlayingMin // 60) ~ "H" ~ (product.timePlayingMin % 60) %}
+                    {% endif %}                  {% endif %}                
+                <div class="text-light rounded d-inline-block p-1 vignette-product">
+                    <img src="{{ absolute_url(asset('picture/theme/duration.svg'))}}" alt="Card image cap"> <h7 class="font-weight-bold">De {{ timeMin }} à {{ timeMax }}</h7>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if promo != 0 %}
+        <div class="d-flex">
+            <h3 class="text-muted px-2"><del>{{ product.price|number_format(2, '.', ',') }} €</del></h6>
+              <h3> {{ promo|number_format(2, '.', ',') }} €</h6>
+        </div>
+        {% else %}
+           <h3> {{ product.price|number_format(2, '.', ',') }} €</h3>
+        {% endif %}
+        {% if (product.quantity > 0) %}
+        <div class="d-flex justify-content-start">
+        <div class="btn-group">
+            <form action="{{ path('basket.update') }}" method="POST" class="d-flex">
+                <input type="hidden" name="idProduct" value="{{ product.id }}">
+                <input type="number" name="quantity" class="form-control w-50" min="1" max="{{product.quantity}}" value="1">
+                <button type="submit" class="mx-1 btn btn-secondary w-100">Ajouter au Panier</button>
+            </form>
+        </div>
+        </div>
+        {% else %}
+        <h7>Rupture de Stock !</h7> 
+        {% endif %}
+    </div>
+</div>
+<div class="row bg-white rounded p-2 mt-2">
+    <div class="w-100">
+    <h4>Informations Supplémentaires</h4>
+    <table class="table table-striped">
+        <tr>
+            <td>
+                <b>Dimension : </b>
+            </td>
+            <td>
+                {{ product.length }} cm * {{ product.width }} cm * {{ product.height }} cm (Longueur * Profondeur * hauteur)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Poids : </b>
+            </td>
+            <td>
+                {{ product.weight }} g
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Quantité Disponible : </b>
+            </td>
+            <td>
+                {{ product.quantity }}
+            </td>
+        </tr>
+    </table>
+    </div>
+</div>
+{% if product.description is not empty %}
+<div class="row bg-white rounded p-2 mt-2">
+    <div class="w-100">
+    <h4>Description Générale</h4>
+        {{ product.description|raw }}
+    </div>
+</div>
+{% endif %}
+<div class="row bg-white rounded p-2 mt-2">
+    <div class="w-100">
+        <h4>Avis</h4>
+            {% if app.user %}
+            <div class="text-center">
+                <a href="{{ path('comment.add', {product: product.id}) }}" class="btn btn-primary"> <i class="fas fa-thumbs-up text-white"></i> Laissez un commentaire</a>
+            </div>
+            {% endif %}
+            <div class="p-2">
+            {% if product.comments|length > 0 %}
+                {% for comment in product.comments %}
+                    <div class="p-2 border-bottom">
+                        <div>
+                            <h5>{{ comment.user.firstName }} {{ comment.user.lastName }} </h5>
+                            <div>
+                                {% if comment.recommended %}
+                                    <i class="fas fa-thumbs-up text-success"></i>
+                                {% else %}
+                                    <i class="fas fa-thumbs-down text-danger"></i>
+                                {% endif %}
+                                <h7 class="d-inline-block font-weight-bold">{{ comment.title }}</h7> laissé le <h7 class="d-inline-block font-weight-bold">{{ comment.dateCreated|date("d/m/Y") }}</h7>
+                            </div>
+                        </div>
+                        <p>
+                            {{ comment.description }}
+                        </p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                Aucun avis sur ce produit.
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$('.block-img-min img').each(function(){
+    $( this ).hover(function(){
+        let value = $( this ).attr('src');
+        $('.block-img-main img').attr('src',value);
+    });
+});
+</script>
+{% endblock %}

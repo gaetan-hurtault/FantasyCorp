@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+    {% if success is defined %}
+        <div class="alert alert-success text-center" role="alert">
+            {{ success }}
+        </div>
+    {% endif %}
+<h1 class="text-center">Bienvenue {{user.firstName}} {{user.lastName}} sur votre profil !</h1>
+<div class="row d-flex justify-content-center w-100">
+    <a href="{{path('user.profile.update')}}" class="btn btn-primary sm-4 m-2">Mes Données</a>
+    <a href="{{path('user.profile.password')}}" class="btn btn-primary sm-4 m-2">Modifer Mon Mot de Passe</a>
+    <a href="{{path('user.profile.baskets')}}" class="btn btn-primary sm-4 m-2">Mes Commandes</a>
+    <a href="{{path('user.profile.listadress')}}" class="btn btn-primary sm-4 m-2">Mes Adresses</a>
+    <a href="{{path('user.profile.listcard')}}" class="btn btn-primary sm-4 m-2">Mes Cartes de Paiement</a>
+</div>
+{% endblock %}

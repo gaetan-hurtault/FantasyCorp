@@ -1,0 +1,56 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}List des Promotions !{% endblock %}
+
+{% block body %}
+<a class="btn btn-primary" href="{{path('admin.promotion.add')}}" role="button">Ajouter une Promo</a>
+<table  class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Date Début
+            </th>
+            <th>
+                Date Fin
+            </th>
+            <th>
+                Nom du Produit
+            </th>
+            <th>
+                Réduction(en %)
+            </th>
+            <th>
+                Nombres d'Articles Nécessaires
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for promo in promos %}
+        <tr>
+            <td>
+                {{ promo.dateBegin|date("m/d/Y") }}
+            </td>
+            <td>
+                {{ promo.DateEnd|date("m/d/Y") }}
+            </td>
+            <td>
+                {{ promo.product.title }}
+            </td>
+            <td>
+                {{ promo.value }}
+            </td>
+            <td>
+                {{ promo.numberProduct }}
+            </td>
+            <td>
+                <a href="{{path("admin.promotion.editer", {id : promo.id})}}" class="btn btn-secondary">Editer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

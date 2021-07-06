@@ -1,0 +1,19 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Fiche Client{% endblock %}
+
+{% block body %}
+    <div class="bg-white p-5 rounded">
+        <div>
+            <h2>Informations Générales :</h2>
+            <div><b>Nom </b> : {{ user.lastname }}</div>
+            <div><b>Prénom </b> : {{ user.firstname }}</div>
+            <div><b>E-mail</b> : {{ user.mail }}</div>
+            <div><b>Téléphone</b> : {{ user.adressBill.phoneNumber }}</div>
+            <h2>Adresse de Facturation :</h2>
+            <div><b>{{ user.adressBill.adress }}</b></div>
+            <div><b>{{ user.adressBill.codePostal }} {{ user.adressBill.city }}</b></div>
+            <div>{{ user.adressBill.country }}</div>
+        </div>
+    </div>
+{% endblock %}

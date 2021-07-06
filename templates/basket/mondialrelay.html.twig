@@ -1,0 +1,162 @@
+{% extends 'basket/base.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+{% block body %}
+<div class="row bg-white rounded p-2 mt-2 mb-2">
+        <div class="d-lg-flex d-none justify-content-center w-100">
+            <div class="p-2 d-flex flex-column justify-content-center text-center align-items-center">
+                <div class="bulleBasket">
+                    1
+                </div>
+                <h6 class="font-weight-bold">Information</h6>
+            </div>
+            <div class="p-2 d-flex flex-column justify-content-center text-center align-items-center">
+                <div class="bulleBasket select">
+                    2
+                </div>
+                <h6 class="font-weight-bold">Envoi</h6>
+            </div>
+            <div class="p-2 d-flex flex-column justify-content-center text-center align-items-center">
+                <div class="bulleBasket">
+                    3
+                </div>
+                <h6 class="font-weight-bold">Validation</h6>
+            </div>
+            <div class="p-2 d-flex flex-column justify-content-center text-center align-items-center">
+                <div class="bulleBasket">
+                    4
+                </div>
+                <h6 class="font-weight-bold">Paiement</h6>
+            </div>
+            <div class="p-2 d-flex flex-column justify-content-center text-center align-items-center">
+                <div class="bulleBasket">
+                    5
+                </div>
+                <h6 class="font-weight-bold">Confirmation</h6>
+            </div>
+        </div>
+    </div>
+<div class="text-center">
+    <a href="https://www.mondialrelay.fr/" target="_blank">
+        <img class="bg-light rounded p-2" id="logoheader" class="my-2" src="{{ absolute_url(asset('picture/theme/POINT-RELAIS.png')) }}">
+    </a>
+</div>
+<h4>
+Selectionnez votre Point Relai :
+</h4>
+{% for PointRelai in content['WSI4_PointRelais_RechercheResult']['PointsRelais']['PointRelais_Details'] %}
+<div class="bg-light rounded mt-2 p-2 card-pointrelai" id="{{PointRelai['Num']}}"> 
+    <h3>{{ PointRelai['LgAdr1']}}</h3>
+    <h5>{{ PointRelai['LgAdr3']}}</h5>
+    <h7>{{ PointRelai['CP']}} {{ PointRelai['Ville']}} {{ PointRelai['Pays']}}</h7>
+    <a class="btn btn-secondary" data-toggle="collapse" href="{{"#collapse" ~ PointRelai['Num']}}" role="button" aria-expanded="false" aria-controls="{{"collapse" ~  PointRelai['Num']}}">Plus d'informations</a>
+    <div class="collapse" id="{{"collapse" ~ PointRelai['Num']}}">
+        <div class="p-2 d-flex">
+            <div class="d-inline-block">
+                <img class="rounded" src="{{PointRelai['URL_Photo']}}">
+            </div>
+            <div class="d-inline-block p-2">
+            <h5>Horaires : </h5>
+                <div>
+                    <b>Lundi :</b>
+                    {% if PointRelai['Horaires_Lundi']['string'][0] != "0000" %}
+                        {{ PointRelai['Horaires_Lundi']['string'][0][:2] }}:{{ PointRelai['Horaires_Lundi']['string'][0][2:] }} - {{ PointRelai['Horaires_Lundi']['string'][1][:2] }}:{{ PointRelai['Horaires_Lundi']['string'][1][2:] }}
+                        {% if PointRelai['Horaires_Lundi']['string'][2] != "0000" %}
+                            {{ PointRelai['Horaires_Lundi']['string'][2][:2] }}:{{ PointRelai['Horaires_Lundi']['string'][2][2:] }} - {{ PointRelai['Horaires_Lundi']['string'][3][:2] }}:{{ PointRelai['Horaires_Lundi']['string'][3][2:] }}
+                        {% endif %}
+                    {% else %}
+                    <i>Fermé</i>
+                    {% endif %}
+                </div>
+                <div>
+                    <b>Mardi :</b>
+                    {% if PointRelai['Horaires_Mardi']['string'][0] != "0000" %}
+                        {{ PointRelai['Horaires_Mardi']['string'][0][:2] }}:{{ PointRelai['Horaires_Mardi']['string'][0][2:] }} - {{ PointRelai['Horaires_Mardi']['string'][1][:2] }}:{{ PointRelai['Horaires_Mardi']['string'][1][2:] }}
+                        {% if PointRelai['Horaires_Mardi']['string'][2] != "0000" %}
+                            {{ PointRelai['Horaires_Mardi']['string'][2][:2] }}:{{ PointRelai['Horaires_Mardi']['string'][2][2:] }} - {{ PointRelai['Horaires_Mardi']['string'][3][:2] }}:{{ PointRelai['Horaires_Mardi']['string'][3][2:] }}
+                        {% endif %}
+                    {% else %}
+                    <i>Fermé</i>
+                    {% endif %}
+                </div>
+                <div>
+                    <b>Mercredi :</b>
+                    {% if PointRelai['Horaires_Mercredi']['string'][0] != "0000" %}
+                        {{ PointRelai['Horaires_Mercredi']['string'][0][:2] }}:{{ PointRelai['Horaires_Mercredi']['string'][0][2:] }} - {{ PointRelai['Horaires_Mercredi']['string'][1][:2] }}:{{ PointRelai['Horaires_Mercredi']['string'][1][2:] }}
+                        {% if PointRelai['Horaires_Mercredi']['string'][2] != "0000" %}
+                            {{ PointRelai['Horaires_Mercredi']['string'][2][:2] }}:{{ PointRelai['Horaires_Mercredi']['string'][2][2:] }} - {{ PointRelai['Horaires_Mercredi']['string'][3][:2] }}:{{ PointRelai['Horaires_Mercredi']['string'][3][2:] }}
+                        {% endif %}
+                    {% else %}
+                    <i>Fermé</i>
+                    {% endif %}
+                </div>
+                <div>
+                    <b>Jeudi :</b>
+                    {% if PointRelai['Horaires_Jeudi']['string'][0] != "0000" %}
+                        {{ PointRelai['Horaires_Jeudi']['string'][0][:2] }}:{{ PointRelai['Horaires_Jeudi']['string'][0][2:] }} - {{ PointRelai['Horaires_Jeudi']['string'][1][:2] }}:{{ PointRelai['Horaires_Jeudi']['string'][1][2:] }}
+                        {% if PointRelai['Horaires_Jeudi']['string'][2] != "0000" %}
+                            {{ PointRelai['Horaires_Jeudi']['string'][2][:2] }}:{{ PointRelai['Horaires_Jeudi']['string'][2][2:] }} - {{ PointRelai['Horaires_Jeudi']['string'][3][:2] }}:{{ PointRelai['Horaires_Jeudi']['string'][3][2:] }}
+                        {% endif %}
+                    {% else %}
+                    <i>Fermé</i>
+                    {% endif %}
+                </div>
+                <div>
+                    <b>Vendredi :</b>
+                    {% if PointRelai['Horaires_Vendredi']['string'][0] != "0000" %}
+                        {{ PointRelai['Horaires_Vendredi']['string'][0][:2] }}:{{ PointRelai['Horaires_Vendredi']['string'][0][2:] }} - {{ PointRelai['Horaires_Vendredi']['string'][1][:2] }}:{{ PointRelai['Horaires_Vendredi']['string'][1][2:] }}
+                        {% if PointRelai['Horaires_Vendredi']['string'][2] != "0000" %}
+                            {{ PointRelai['Horaires_Vendredi']['string'][2][:2] }}:{{ PointRelai['Horaires_Vendredi']['string'][2][2:] }} - {{ PointRelai['Horaires_Vendredi']['string'][3][:2] }}:{{ PointRelai['Horaires_Vendredi']['string'][3][2:] }}
+                        {% endif %}
+                    {% else %}
+                    <i>Fermé</i>
+                    {% endif %}
+                </div>
+                <div>
+                    <b>Samedi :</b>
+                    {% if PointRelai['Horaires_Samedi']['string'][0] != "0000" %}
+                        {{ PointRelai['Horaires_Samedi']['string'][0][:2] }}:{{ PointRelai['Horaires_Samedi']['string'][0][2:] }} - {{ PointRelai['Horaires_Samedi']['string'][1][:2] }}:{{ PointRelai['Horaires_Samedi']['string'][1][2:] }}
+                        {% if PointRelai['Horaires_Samedi']['string'][2] != "0000" %}
+                            {{ PointRelai['Horaires_Samedi']['string'][2][:2] }}:{{ PointRelai['Horaires_Samedi']['string'][2][2:] }} - {{ PointRelai['Horaires_Samedi']['string'][3][:2] }}:{{ PointRelai['Horaires_Samedi']['string'][3][2:] }}
+                        {% endif %}
+                    {% else %}
+                    <i>Fermé</i>
+                    {% endif %}
+                </div>
+                <div>                
+                    <b>Dimanche :</b>
+                    {% if PointRelai['Horaires_Dimanche']['string'][0] != "0000" %}
+                        {{ PointRelai['Horaires_Dimanche']['string'][0][:2] }}:{{ PointRelai['Horaires_Dimanche']['string'][0][2:] }} - {{ PointRelai['Horaires_Dimanche']['string'][1][:2] }}:{{ PointRelai['Horaires_Dimanche']['string'][1][2:] }}
+                        {% if PointRelai['Horaires_Dimanche']['string'][2] != "0000" %}
+                            {{ PointRelai['Horaires_Dimanche']['string'][2][:2] }}:{{ PointRelai['Horaires_Dimanche']['string'][2][2:] }} - {{ PointRelai['Horaires_Dimanche']['string'][3][:2] }}:{{ PointRelai['Horaires_Dimanche']['string'][3][2:] }}
+                        {% endif %}
+                    {% else %}
+                    <i>Fermé</i>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<form action="{{path('basket.validate')}}" method="POST" class="mt-2 text-center w-100">
+    <input type="hidden" value="" name="idPointRelai" id="idPointRelai">
+    <input type="submit" value="Passez au paiement" class="btn btn-primary">
+</form>
+<script>
+$('.card-pointrelai').click(function(e){
+    $('.card-pointrelai').each(function()
+    {
+        if($(this).hasClass('selected'))
+        {
+            $(this).removeClass('selected');
+        }
+    });
+
+    $(this).addClass('selected');
+    let value = $(this).attr('id');
+    $('#idPointRelai').attr('value',value);
+
+    });
+</script>
+{% endblock %}

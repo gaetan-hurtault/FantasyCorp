@@ -1,0 +1,53 @@
+<h3 class="mt-2">Mes Derniers Produits :</h3>
+<div class="row">
+{% for data in products %}
+        <div class="col-sm-12 col-md-6 col-lg-3 mb-1">
+              <div class="card box-shadow mb-1 h-100">
+                <a href="{{ path('product.information', {slug: data["product"].slug,id_product: data["product"].id}) }}">
+                  <div class="card-header p-0 image-card">
+                    <img class="card-img-top" src="{{ absolute_url(asset('picture/content/' ~ data["product"].pictureFirst.name))}}" alt="Card image cap">
+                  </div>
+                </a>
+                <div class="card-body text-center d-flex justify-content-center flex-column">
+            <div class="tag">
+              {% if (data["product"].dateAdd|date_modify("+10 day")|date("Y/m/d") >=  "now"|date("Y/m/d")) %}       
+                <h7>Nouveau</h7>
+              {% elseif (data["product"].dateAdd|date_modify("+1 month")|date("Y/m/d") >=  "now"|date("Y/m/d")) %}
+                <h7>Nouveauté</h7>
+              {% endif %}
+
+              {% if (data["product"].productCondition == "occasion")%}
+                <h7>Occasion</h7>
+              {% endif %}
+              {% if (data["product"].excluWeb == true)%}
+                <h7>Exclusivité Web</h7>
+              {% endif %}
+            </div>
+              <h6> {{ data["product"].title }} </h6> 
+              {{ include('partial/product/_ratingproduct.html.twig', {rating: data["product"].rating}) }} 
+              {% if data["promo"] == 0 %}
+              <h6>{{ data["product"].price|number_format(2, '.', ',') }} € </h6>
+              {% else %}
+              <div class="d-flex justify-content-center">
+                <h6 class="text-muted px-2"><del>{{ data["product"].price|number_format(2, '.', ',') }} €</del></h6>
+                <h6> {{ data["promo"]|number_format(2, '.', ',') }} €</h6>
+              </div>
+              {% endif %}
+              {% if (data["product"].quantity > 0) %}
+              <div class="d-flex justify-content-center align-items-center">
+                <div class="btn-group">
+                    <form action="{{ path('basket.update') }}" method="POST">
+                    <input type="hidden" name="idProduct" value="{{ data["product"].id }}">
+                    <input type="hidden" name="quantity" class="form-control w-25" min="1" max="{{data["product"].quantity}}" value="1">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Ajouter au Panier</button>
+                    </form>
+                </div>
+              </div>
+              {% else %}
+              <h7>Rupture de Stock !</h7> 
+              {% endif %}
+          </div>
+        </div>
+    </div>
+{% endfor %}
+</div>

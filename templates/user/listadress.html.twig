@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mes Adresses :{% endblock %}
+
+{% block body %}
+    {% if error is defined %}
+        <div class="alert alert-warning text-center" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+    <h1>Mes Adresses :</h1>
+    <div class="row d-flex justify-content-between">
+    {% for adresse in adress %}
+        <div class="card p-2 col-sm-6 col-md-4 text-center">
+            <h5>{{adresse.firstName}}
+            {{adresse.lastName}}</h5>
+            <div>{{adresse.adress}}</div>
+            <div>{{adresse.phoneNumber}}</div>
+            <div>{{adresse.codePostal ~ " - " ~ adresse.city ~ " - " ~ adresse.country}}</div>
+            <div class="d-flex flex-wrap justify-content-center">
+                <a href="{{ path('user.profile.editeradress', {idAdress: adresse.id}) }}" class="btn btn-primary w-25 m-1">Editer</a>
+                {% if adresse.id != adresse.user.adressBill.id %}
+                    <a href="{{ path('user.profile.deleteadress', {adress: adresse.id}) }}" class="btn btn-danger w-25 m-1">Delete</a>
+                    <a href="{{ path('user.profile.billadress', {adress: adresse.id}) }}" class="btn btn-secondary w-100">Définir en adresse de facturation</a>
+                {% else %}
+                <h6 class="w-100">Adresse de Facturation</h6>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+        <div class="card p-2 col-sm-6 col-md-4 text-center d-flex justify-content-center">
+            <a href="{{ path('user.profile.addadress')}}">
+                <h3>Ajouter une Adresse</h3>
+            </a>
+        </div>     
+</div>
+{% endblock %}

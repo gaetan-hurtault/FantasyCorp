@@ -1,0 +1,47 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Liste des Thèmes !{% endblock %}
+
+{% block body %}
+<a class="btn btn-primary" href="{{path('admin.theme.add')}}" role="button">Ajouter un Thème</a>
+<table  class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Nom du Thème
+            </th>
+            <th>
+                Favoris
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for theme in themes %}
+        <tr>         
+            <td>
+                {{ theme.name }}
+            </td>
+            <td>
+            {% if theme.picture is not null %}
+                {% if theme.favorites == true %}
+                    <a href="{{path("admin.theme.favorite", {id : theme.id})}}" class="text-warning">
+                        <i class="fas fa-star"></i>
+                    </a>
+                {% else %}
+                    <a href="{{path("admin.theme.favorite", {id : theme.id})}}">
+                        <i class="far fa-star"></i>
+                    </a>
+                {% endif %}
+            {% endif %}
+            </td>
+            <td>
+                <a href="{{path("admin.theme.editer", {id : theme.id})}}" class="btn btn-secondary">Editer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

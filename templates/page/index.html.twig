@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue{% endblock %}
+
+{% block body %}
+
+{{ render(path('slide.render'))}}
+
+{{ render(path('product.last'))}}
+
+{{ render(path('theme.favorite'))}}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Editer une Page{% endblock %}
+
+{% block body %}
+    <h1>Editer une Page :</h1>
+    {{ form_start(form)}}
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

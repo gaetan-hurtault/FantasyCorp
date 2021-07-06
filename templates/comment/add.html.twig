@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Laissez un commentaire{% endblock %}
+
+{% block body %}
+<h3>Laissez un commentaire:</h3>
+    {{ form_start(form)}}
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Les Clients{% endblock %}
+
+{% block body %}
+<table  class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Id Client
+            </th>
+            <th>
+                Nom Client
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>
+                {{ user.id }}
+            </td>
+            <td>
+                {{ user.firstName }} {{ user.lastName }}
+            </td>
+            <td>
+                <a href="{{path("admin.user.view", {user : user.id})}}" class="btn btn-secondary">Fiche Client</a>
+                <a href="{{path("admin.user.addadress", {user : user.id})}}" class="btn btn-secondary">Ajouter une Adresse</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(users) }}
+{% endblock %}

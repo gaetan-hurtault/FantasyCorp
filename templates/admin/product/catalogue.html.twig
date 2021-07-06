@@ -1,0 +1,110 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Catalogue{% endblock %}
+
+{% block body %}
+{{ form_start(form, {'attr':{'id':'formSearchAdmin'}})}}
+<div class="my-custom-class-for-errors">
+    {{ form_errors(form) }}
+</div>
+<a class="btn btn-primary" href="{{path('admin.product.add')}}" role="button">Ajouter un Produit</a>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th colspan="2">
+                Titre
+            </th>
+            <th>
+                Catégorie
+            </th>
+            <th>
+                Montant TTC
+            </th>
+            <th>
+                Stock
+            </th>
+            <th>
+                Statut
+            </th>
+            <th>
+                Editer
+            </th>
+            <th>
+                Promotion
+            </th>
+        </tr>
+        <tr>
+            <th>
+            
+            </th>
+            <th colspan="2">
+                {{ form_widget(form.search,{'attr': {'class': 'w-100 mx-1'}})}}
+            </th>
+            <th>
+            {{ form_widget(form.categories,{'attr': {'class': 'w-100 mx-1 selectpicker categoryAdmin','data-live-search':'true','title':'Aucun Choix','data-selected-text-format':"count > 2"}})}}
+            </th>
+            <th>
+                <div class="d-flex">
+                    {{ form_widget(form.prixMin,{'attr': {'class': 'w-50 mx-1','placeholder' : 'min'}})}} -
+                    {{ form_widget(form.prixMax,{'attr': {'class': 'w-50 mx-1','placeholder' : 'max'}})}} €
+                </div>
+            </th>
+            <th>
+            
+            </th>
+            <th>
+            
+            </th>
+            <th>
+                {{ form_widget(form.rechercher) }}
+            </th>
+            <th>
+                <a href="{{path('admin.product.catalogue')}}" class="mx-1 btn btn-secondary">Reinitialiser</a>
+            </th>
+        </tr>
+    </thead>
+    {{ form_end(form) }}
+    <tbody>
+    {% for product in products %}
+        <tr>
+            <td>
+                {{ product.id }}
+            </td>
+            <td class="imgAdmin">
+                <img src="{{ absolute_url(asset('picture/content/' ~ product.pictureFirst.name))}}" alt="Card image cap">
+            </td>
+            <td class="w-25">
+                {{ product.title }}
+            </td>
+            <td>
+                {{ product.category.name }}
+            </td>
+            <td>
+                {{ product.price }} €
+            </td>
+            <td>
+                {{ product.quantity }}
+            </td>
+            <td>
+                {% if product.online == 1 %}
+                <a href="{{path("admin.product.online", {id : product.id})}}" class="text-success"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>
+                {% else %}
+                <a href="{{path("admin.product.online", {id : product.id})}}" class="text-danger"><i class="fa fa-ban" aria-hidden="true"></i></a>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{path("admin.product.editer", {id : product.id})}}" title="editer"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            </td>
+            <td>
+                <a href="{{path("admin.promotion.addById", {id : product.id})}}" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(products) }}
+{% endblock %}

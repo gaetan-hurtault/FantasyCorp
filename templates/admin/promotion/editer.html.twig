@@ -1,0 +1,10 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}éditer{% endblock %}
+
+{% block body %}
+    <h1>éditer la promo :</h1>
+    {{ form_start(form)}}
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{page.title}}{% endblock %}
+
+{% block body %}
+<div class="bg-white rounded p-2">
+    {{ page.description | raw }}
+</div>
+{% endblock %}

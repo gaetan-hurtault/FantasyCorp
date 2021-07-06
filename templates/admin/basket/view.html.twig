@@ -1,0 +1,62 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Fiche Panier{% endblock %}
+{% block body %}
+    <div class="bg-white rounded p-2 mt-2">
+        <div class="d-flex flex-column align-items-center w-100">
+            <h4>Récapitulatif de la Commande :</h4>
+            <div class="w-100">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th colspan="2">
+                                    Description
+                                </th>
+                                <th>
+                                    Prix Unitaire
+                                </th>
+                                <th>
+                                    Quantiy
+                                </th>
+                                <th>
+                                    Prix Total
+                                <th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, commandLine in basket.commandLines %}
+                            <tr>    
+                                <td>
+                                    <div class="image-basket">
+                                        <img src="{{ absolute_url(asset('picture/content/' ~ commandLine.product.pictureFirst.name)) }}">
+                                    </div>
+                                </td>
+                                <td>
+                                    {{commandLine.product.title}}
+                                </td>
+                                <td>
+                                    {{ (commandLine.totalPrice / commandLine.quantity)|round(2, 'common')}} €
+                                </td>
+                                <td>
+                                {{ commandLine.quantity }}
+                                </td>
+                                <td>
+                                    {{ commandLine.totalPrice}} €
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="4" class="text-right font-weight-bold">
+                            Prix Total :
+                            </td>
+                            <td>
+                                {{ basket.price }} €
+                            </td>
+                        </tr>
+                        </tbody>
+                        </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

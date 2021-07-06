@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Commandes{% endblock %}
+
+{% block body %}
+
+<h1>Mes Commandes</h1>
+
+{% if user.baskets is empty %}
+    <h4>Vous n'avez pas encore passé de commandes.</h4>
+{% else %}
+<ul>
+    {% for basket in user.baskets %}
+        {% if basket.state >= 3  %}
+        <li>
+            Commande n°{{ basket.id }} - 
+            {{ constant('App\\Entity\\Basket::STATE')[basket.state] }} - 
+            <a href="{{ path('bill.show', {idBill : basket.bills[0].id}) }}">Ma Facture</a>
+        </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
